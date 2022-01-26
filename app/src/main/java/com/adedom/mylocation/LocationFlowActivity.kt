@@ -2,7 +2,6 @@ package com.adedom.mylocation
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.adedom.mylocation.databinding.ActivityLocationFlowBinding
 import com.google.android.gms.location.LocationServices
@@ -10,7 +9,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class LocationFlowActivity : AppCompatActivity() {
+class LocationFlowActivity : BaseLocationActivity() {
 
     private val binding by lazy {
         ActivityLocationFlowBinding.inflate(layoutInflater)

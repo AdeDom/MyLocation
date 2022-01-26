@@ -6,10 +6,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import com.adedom.mylocation.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseLocationActivity() {
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)

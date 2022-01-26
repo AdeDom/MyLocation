@@ -2,7 +2,6 @@ package com.adedom.mylocation
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.adedom.mylocation.databinding.ActivityMyGoogleMapBinding
 import com.google.android.gms.location.LocationServices
@@ -17,7 +16,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class MyGoogleMapActivity : AppCompatActivity() {
+class MyGoogleMapActivity : BaseLocationActivity() {
 
     private var googleMap: GoogleMap? = null
     private var marker: Marker? = null
