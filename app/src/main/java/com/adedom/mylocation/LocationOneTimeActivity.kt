@@ -32,7 +32,9 @@ class LocationOneTimeActivity : BaseLocationActivity() {
             val addresses = geocoder.getFromLocation(latitude, longitude, 1)
             val hasAddress = !addresses.isNullOrEmpty()
             if (hasAddress) {
-                binding.tvLocation.text = addresses[0].locality
+                val locality = addresses[0].locality
+                val subLocality = addresses[0].subLocality.orEmpty()
+                binding.tvLocation.text = locality ?: subLocality
             }
         }
     }
