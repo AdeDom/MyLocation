@@ -42,8 +42,8 @@ fun Location.asString(format: Int = Location.FORMAT_DEGREES): String {
 }
 
 @SuppressLint("MissingPermission")
-suspend fun FusedLocationProviderClient.awaitLastLocation(): Location =
-    suspendCancellableCoroutine<Location> { continuation ->
+suspend fun FusedLocationProviderClient.awaitLastLocation(): Location? =
+    suspendCancellableCoroutine { continuation ->
         lastLocation.addOnSuccessListener { location ->
             continuation.resume(location)
         }.addOnFailureListener { e ->
@@ -52,13 +52,14 @@ suspend fun FusedLocationProviderClient.awaitLastLocation(): Location =
     }
 
 @SuppressLint("MissingPermission")
-fun FusedLocationProviderClient.locationFlow() = callbackFlow<Location> {
+fun FusedLocationProviderClient.locationFlow() = callbackFlow<Location?> {
     val callback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
             for (location in result.locations) {
                 try {
                     trySend(location).isSuccess // emit location into the Flow using ProducerScope.offer
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     // nothing to do
                     // Channel was probably already closed by the time offer was called
                 }

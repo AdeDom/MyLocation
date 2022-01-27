@@ -23,13 +23,15 @@ class LocationOneTimeActivity : BaseLocationActivity() {
 
         lifecycleScope.launch {
             val location = locationProviderClient.awaitLastLocation()
-            val latitude = location.latitude
-            val longitude = location.longitude
-            val locationOneTime = "$latitude, $longitude"
+            val locationOneTime = location?.asString()
             binding.tvLocationOneTime.text = locationOneTime
 
             val geocoder = Geocoder(baseContext, Locale.getDefault())
-            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+            val addresses = geocoder.getFromLocation(
+                location?.latitude ?: 0.0,
+                location?.longitude ?: 0.0,
+                5
+            )
             val hasAddress = !addresses.isNullOrEmpty()
             if (hasAddress) {
                 val locality = addresses[0].locality

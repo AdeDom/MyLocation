@@ -25,9 +25,7 @@ class LocationFlowActivity : BaseLocationActivity() {
         locationProviderClient
             .locationFlow()
             .onEach { location ->
-                val latitude = location.latitude
-                val longitude = location.longitude
-                val locationFlow = "$latitude, $longitude"
+                val locationFlow = location?.asString()
                 binding.tvLocationFlow.text = locationFlow
             }
             .catch { throwable ->
