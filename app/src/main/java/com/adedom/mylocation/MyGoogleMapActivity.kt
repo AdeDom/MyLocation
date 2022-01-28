@@ -35,6 +35,12 @@ class MyGoogleMapActivity : BaseLocationActivity() {
         binding.mapView.onCreate(savedInstanceState)
         binding.mapView.getMapAsync { googleMap ->
             mGoogleMap = googleMap
+            mGoogleMap?.setMinZoomPreference(12F)
+            mGoogleMap?.setMaxZoomPreference(16F)
+
+            val latLng = LatLng(13.7244416, 100.3529132)
+            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 14F)
+            mGoogleMap?.animateCamera(cameraUpdate)
         }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -65,9 +71,6 @@ class MyGoogleMapActivity : BaseLocationActivity() {
                 location?.let {
                     val latLng = LatLng(location.latitude, location.longitude)
                     val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 14F)
-
-                    mGoogleMap?.setMinZoomPreference(12F)
-                    mGoogleMap?.setMaxZoomPreference(16F)
                     mGoogleMap?.animateCamera(cameraUpdate)
 
                     val markerOptions = MarkerOptions()
