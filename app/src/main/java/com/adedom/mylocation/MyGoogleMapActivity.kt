@@ -38,8 +38,8 @@ class MyGoogleMapActivity : BaseLocationActivity() {
             mGoogleMap?.setMinZoomPreference(12F)
             mGoogleMap?.setMaxZoomPreference(16F)
 
-            val latLng = LatLng(13.7244416, 100.3529132)
-            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 14F)
+            val latLng = LatLng(13.6928866, 100.6062327)
+            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16F)
             mGoogleMap?.animateCamera(cameraUpdate)
         }
 
@@ -68,16 +68,18 @@ class MyGoogleMapActivity : BaseLocationActivity() {
 
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
-                location?.let {
-                    val latLng = LatLng(location.latitude, location.longitude)
-                    val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 14F)
-                    mGoogleMap?.animateCamera(cameraUpdate)
-
-                    val markerOptions = MarkerOptions()
-                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker())
-                    markerOptions.position(latLng)
-                    mGoogleMap?.addMarker(markerOptions)
+                if (location == null) {
+                    return@addOnSuccessListener
                 }
+
+                val latLng = LatLng(location.latitude, location.longitude)
+                val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 14F)
+                mGoogleMap?.animateCamera(cameraUpdate)
+
+                val markerOptions = MarkerOptions()
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker())
+                markerOptions.position(latLng)
+                mGoogleMap?.addMarker(markerOptions)
             }
             .addOnFailureListener { exception ->
                 val message = exception.message

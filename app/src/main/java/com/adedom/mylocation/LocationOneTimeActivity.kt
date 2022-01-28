@@ -25,15 +25,15 @@ class LocationOneTimeActivity : BaseLocationActivity() {
 
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
-                val locationOneTime = "${location?.latitude}, ${location?.longitude}"
+                if (location == null) {
+                    return@addOnSuccessListener
+                }
+
+                val locationOneTime = "${location.latitude}, ${location.longitude}"
                 binding.tvLocationOneTime.text = locationOneTime
 
                 val geocoder = Geocoder(baseContext, Locale.getDefault())
-                val addresses = geocoder.getFromLocation(
-                    location?.latitude ?: 0.0,
-                    location?.longitude ?: 0.0,
-                    5
-                )
+                val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 5)
                 val hasAddress = !addresses.isNullOrEmpty()
                 if (hasAddress) {
                     val locality = addresses[0].locality

@@ -29,7 +29,7 @@ class LocationFlowActivity : BaseLocationActivity() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
-                    val locationFlow = "${location?.latitude}, ${location?.longitude}"
+                    val locationFlow = "${location.latitude}, ${location.longitude}"
                     binding.tvLocationFlow.text = locationFlow
                 }
             }
