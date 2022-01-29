@@ -50,6 +50,18 @@ class MainActivity : BaseLocationActivity() {
         }
     }
 
+    private val launcherForegroundService = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { result ->
+        val isGranted = result.entries.all { it.value }
+        if (isGranted) {
+            val intent = Intent(this, ForegroundServiceActivity::class.java)
+            startActivity(intent)
+        } else {
+            startApplicationDetailSetting()
+        }
+    }
+
     private fun startApplicationDetailSetting() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         val uri = Uri.fromParts("package", packageName, null)
@@ -78,6 +90,10 @@ class MainActivity : BaseLocationActivity() {
 
         binding.btnGoogleMap.setOnClickListener {
             launcherMyGoogleMap.launch(permissions)
+        }
+
+        binding.btnForegroundService.setOnClickListener {
+            launcherForegroundService.launch(permissions)
         }
     }
 }

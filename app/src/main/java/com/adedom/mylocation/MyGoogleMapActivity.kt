@@ -39,7 +39,7 @@ class MyGoogleMapActivity : BaseLocationActivity() {
             mGoogleMap?.setMaxZoomPreference(16F)
 
             val latLng = LatLng(13.6928866, 100.6062327)
-            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 16F)
+            val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 12F)
             mGoogleMap?.animateCamera(cameraUpdate)
         }
 
