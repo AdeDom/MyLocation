@@ -6,12 +6,15 @@ import android.os.Bundle
 import android.util.Log
 import com.adedom.mylocation.databinding.ActivityLocationOneTimeBinding
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LocationOneTimeActivity : BaseLocationActivity() {
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    @Inject
+    lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val binding by lazy {
         ActivityLocationOneTimeBinding.inflate(layoutInflater)
@@ -20,8 +23,6 @@ class LocationOneTimeActivity : BaseLocationActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->

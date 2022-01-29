@@ -5,19 +5,27 @@ import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import com.adedom.mylocation.databinding.ActivityMyGoogleMapBinding
-import com.google.android.gms.location.*
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MyGoogleMapActivity : BaseLocationActivity() {
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    @Inject
+    lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private lateinit var locationRequest: LocationRequest
+    @Inject
+    lateinit var locationRequest: LocationRequest
 
     private lateinit var locationCallback: LocationCallback
 
@@ -42,10 +50,6 @@ class MyGoogleMapActivity : BaseLocationActivity() {
             val cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 12F)
             mGoogleMap?.animateCamera(cameraUpdate)
         }
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        locationRequest = createLocationRequest()
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
@@ -85,12 +89,6 @@ class MyGoogleMapActivity : BaseLocationActivity() {
                 val message = exception.message
                 Log.d(this::class.java.name, "addOnFailureListener: $message")
             }
-    }
-
-    private fun createLocationRequest() = LocationRequest.create().apply {
-        interval = 3000
-        fastestInterval = 2000
-        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
     override fun onResume() {
