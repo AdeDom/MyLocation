@@ -12,9 +12,9 @@ import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.gms.location.*
-import java.util.concurrent.TimeUnit
 
 class ForegroundOnlyLocationService : Service() {
+
     private var configurationChange = false
 
     private var serviceRunningInForeground = false
@@ -37,12 +37,8 @@ class ForegroundOnlyLocationService : Service() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
         locationRequest = LocationRequest.create().apply {
-            interval = TimeUnit.SECONDS.toMillis(60)
-
-            fastestInterval = TimeUnit.SECONDS.toMillis(30)
-
-            maxWaitTime = TimeUnit.MINUTES.toMillis(2)
-
+            interval = 3000
+            fastestInterval = 2000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
@@ -155,7 +151,7 @@ class ForegroundOnlyLocationService : Service() {
             .bigText(mainNotificationText)
             .setBigContentTitle(titleText)
 
-        val launchActivityIntent = Intent(this, MainActivity::class.java)
+        val launchActivityIntent = Intent(this, ForegroundServiceActivity::class.java)
 
         val cancelIntent = Intent(this, ForegroundOnlyLocationService::class.java)
         cancelIntent.putExtra(EXTRA_CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION, true)

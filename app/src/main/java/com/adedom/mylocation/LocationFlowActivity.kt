@@ -32,6 +32,7 @@ class LocationFlowActivity : BaseLocationActivity() {
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
                 for (location in locationResult.locations) {
                     val locationFlow = "${location.latitude}, ${location.longitude}"
                     binding.tvLocationFlow.text = locationFlow

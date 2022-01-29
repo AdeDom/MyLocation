@@ -8,16 +8,18 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
-import android.widget.Button
-import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.adedom.mylocation.databinding.ActivityForegroundServiceBinding
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
 private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
 
+@AndroidEntryPoint
 class ForegroundServiceActivity : BaseLocationActivity(),
     SharedPreferences.OnSharedPreferenceChangeListener {
+
     private var foregroundOnlyLocationServiceBound = false
 
     private var foregroundOnlyLocationService: ForegroundOnlyLocationService? = null
@@ -25,10 +27,6 @@ class ForegroundServiceActivity : BaseLocationActivity(),
     private lateinit var foregroundOnlyBroadcastReceiver: ForegroundOnlyBroadcastReceiver
 
     private lateinit var sharedPreferences: SharedPreferences
-
-    private lateinit var foregroundOnlyLocationButton: Button
-
-    private lateinit var outputTextView: TextView
 
     private val foregroundOnlyServiceConnection = object : ServiceConnection {
 
@@ -44,20 +42,20 @@ class ForegroundServiceActivity : BaseLocationActivity(),
         }
     }
 
+    private val binding by lazy {
+        ActivityForegroundServiceBinding.inflate(layoutInflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_foreground_service)
+        setContentView(binding.root)
 
         foregroundOnlyBroadcastReceiver = ForegroundOnlyBroadcastReceiver()
 
         sharedPreferences =
             getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
 
-        foregroundOnlyLocationButton = findViewById(R.id.foreground_only_location_button)
-        outputTextView = findViewById(R.id.output_text_view)
-
-        foregroundOnlyLocationButton.setOnClickListener {
+        binding.foregroundOnlyLocationButton.setOnClickListener {
             val enabled = sharedPreferences.getBoolean(
                 SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false
             )
@@ -135,7 +133,7 @@ class ForegroundServiceActivity : BaseLocationActivity(),
 
         if (provideRationale) {
             Snackbar.make(
-                findViewById(R.id.activity_main),
+                binding.root,
                 R.string.permission_rationale,
                 Snackbar.LENGTH_LONG
             )
@@ -170,7 +168,7 @@ class ForegroundServiceActivity : BaseLocationActivity(),
                     updateButtonState(false)
 
                     Snackbar.make(
-                        findViewById(R.id.activity_main),
+                        binding.root,
                         R.string.permission_denied_explanation,
                         Snackbar.LENGTH_LONG
                     )
@@ -194,17 +192,17 @@ class ForegroundServiceActivity : BaseLocationActivity(),
 
     private fun updateButtonState(trackingLocation: Boolean) {
         if (trackingLocation) {
-            foregroundOnlyLocationButton.text =
+            binding.foregroundOnlyLocationButton.text =
                 getString(R.string.stop_location_updates_button_text)
         } else {
-            foregroundOnlyLocationButton.text =
+            binding.foregroundOnlyLocationButton.text =
                 getString(R.string.start_location_updates_button_text)
         }
     }
 
     private fun logResultsToScreen(output: String) {
-        val outputWithPreviousLogs = "$output\n${outputTextView.text}"
-        outputTextView.text = outputWithPreviousLogs
+        val outputWithPreviousLogs = "$output\n${binding.outputTextView.text}"
+        binding.outputTextView.text = outputWithPreviousLogs
     }
 
     private inner class ForegroundOnlyBroadcastReceiver : BroadcastReceiver() {
