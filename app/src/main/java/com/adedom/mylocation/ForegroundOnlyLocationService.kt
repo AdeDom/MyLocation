@@ -32,6 +32,7 @@ class ForegroundOnlyLocationService : Service() {
     private var currentLocation: Location? = null
 
     override fun onCreate() {
+        super.onCreate()
         notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
@@ -60,6 +61,8 @@ class ForegroundOnlyLocationService : Service() {
                 }
             }
         }
+
+        subscribeToLocationUpdates()
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -88,7 +91,7 @@ class ForegroundOnlyLocationService : Service() {
     }
 
     override fun onUnbind(intent: Intent): Boolean {
-        if (!configurationChange && SharedPreferenceUtil.getLocationTrackingPref(this)) {
+        if (!configurationChange) {
             val notification = generateNotification(currentLocation)
             startForeground(NOTIFICATION_ID, notification)
             serviceRunningInForeground = true
@@ -97,40 +100,25 @@ class ForegroundOnlyLocationService : Service() {
         return true
     }
 
-    override fun onDestroy() {
-    }
-
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configurationChange = true
     }
 
     fun subscribeToLocationUpdates() {
-        SharedPreferenceUtil.saveLocationTrackingPref(this, true)
-
         startService(Intent(applicationContext, ForegroundOnlyLocationService::class.java))
 
-        try {
-            fusedLocationProviderClient.requestLocationUpdates(
-                locationRequest, locationCallback, Looper.getMainLooper()
-            )
-        } catch (unlikely: SecurityException) {
-            SharedPreferenceUtil.saveLocationTrackingPref(this, false)
-        }
+        fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest, locationCallback, Looper.getMainLooper()
+        )
     }
 
     fun unsubscribeToLocationUpdates() {
-        try {
-            val removeTask = fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-            removeTask.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    stopSelf()
-                } else {
-                }
+        val removeTask = fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        removeTask.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                stopSelf()
             }
-            SharedPreferenceUtil.saveLocationTrackingPref(this, false)
-        } catch (unlikely: SecurityException) {
-            SharedPreferenceUtil.saveLocationTrackingPref(this, true)
         }
     }
 
@@ -193,7 +181,7 @@ class ForegroundOnlyLocationService : Service() {
     }
 
     companion object {
-        private const val PACKAGE_NAME = "com.example.android.whileinuselocation"
+        private const val PACKAGE_NAME = "com.adedom.mylocation"
 
         internal const val ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST =
             "$PACKAGE_NAME.action.FOREGROUND_ONLY_LOCATION_BROADCAST"
@@ -205,6 +193,6 @@ class ForegroundOnlyLocationService : Service() {
 
         private const val NOTIFICATION_ID = 12345678
 
-        private const val NOTIFICATION_CHANNEL_ID = "while_in_use_channel_01"
+        private const val NOTIFICATION_CHANNEL_ID = "my_location"
     }
 }
