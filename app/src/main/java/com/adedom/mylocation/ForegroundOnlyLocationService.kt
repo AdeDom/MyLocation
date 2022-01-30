@@ -139,7 +139,7 @@ class ForegroundOnlyLocationService : Service() {
             .bigText(mainNotificationText)
             .setBigContentTitle(titleText)
 
-        val launchActivityIntent = Intent(this, ForegroundServiceActivity::class.java)
+        val launchActivityIntent = Intent(this, MainActivity::class.java)
 
         val cancelIntent = Intent(this, ForegroundOnlyLocationService::class.java)
         cancelIntent.putExtra(EXTRA_CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION, true)
