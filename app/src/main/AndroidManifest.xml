@@ -33,6 +33,7 @@
         <activity android:name=".MyGoogleMapActivity" />
         <activity android:name=".ForegroundServiceActivity" />
         <activity android:name=".GoogleMapForegroundServiceActivity" />
+        <activity android:name=".RequestOneTimeActivity" />
 
         <service
             android:name=".ForegroundOnlyLocationService"
